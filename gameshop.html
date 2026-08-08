@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAME SHOP STORE</title>
+    <style>
+        /* 📌👇 هنا تقدر تعدل ألوان الموقع الأساسية 👇📌 */
+        /* ================================== */
+        /* إعدادات عامة وتصميم الألوان */
+        /* ================================== */
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #0d1117; /* لون خلفية الموقع */
+            color: #c9d1d9; /* لون الخط الأساسي */
+            margin: 0; 
+            padding: 20px; 
+            padding-bottom: 50px;
+        }
+        h1 { 
+            text-align: center; 
+            color: #58a6ff; /* لون اسم المحل فوق خالص */
+            margin-bottom: 30px; 
+            text-shadow: 0 0 15px rgba(88, 166, 255, 0.4); 
+            font-size: 32px;
+            letter-spacing: 2px;
+        }
+        
+        /* ================================== */
+        /* تصميم شريط التنقل (الزراير اللي فوق) */
+        /* ================================== */
+        .tabs-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 40px;
+            background: #161b22;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #30363d;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .tab-btn {
+            background-color: transparent;
+            color: #8b949e; /* لون الزرار وهو مش متفعل */
+            border: 2px solid transparent;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .tab-btn:hover {
+            color: #c9d1d9;
+            background-color: #21262d;
+        }
+        .tab-btn.active {
+            color: #fff;
+            background-color: #1f6feb; /* لون الزرار وهو متفعل (أزرق) */
+            border-color: #58a6ff;
+            box-shadow: 0 0 15px rgba(88, 166, 255, 0.3);
+        }
+
+        /* إخفاء وإظهار الأقسام (Animation) */
+        .tab-content { display: none; animation: fadeIn 0.5s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ================================== */
+        /* تصميم شريط البحث عن الألعاب */
+        /* ================================== */
+        .search-container { text-align: center; margin-bottom: 40px; }
+        input[type="text"] { 
+            padding: 15px; 
+            width: 90%; 
+            max-width: 500px; 
+            border: 1px solid #30363d; 
+            border-radius: 30px; 
+            background-color: #161b22; 
+            color: #fff; 
+            outline: none; 
+            font-size: 16px; 
+            text-align: center; 
+            transition: 0.3s;
+        }
+        input[type="text"]:focus { border-color: #58a6ff; box-shadow: 0 0 15px rgba(88, 166, 255, 0.4); }
+
+        /* ================================== */
+        /* تصميم الكروت (للدرعات، الصيانة، والإكسسوارات) */
+        /* ================================== */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+            justify-content: center;
+        }
+        .card {
+            background-color: #161b22;
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid #30363d;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+        .card:hover { 
+            transform: translateY(-8px); 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4); 
+            border-color: #58a6ff;
+        }
+        
+        /* 📌👇 ألوان الخطوط اللي فوق الكروت 👇📌 */
+        .border-ps5 { border-top: 4px solid #ffffff; }     /* كارت بلايستيشن 5 */
+        .border-ps4 { border-top: 4px solid #1f6feb; }     /* كارت بلايستيشن 4 */
+        .border-maintain { border-top: 4px solid #f85149; } /* كارت الصيانة (أحمر) */
+        .border-acc { border-top: 4px solid #2ea043; }      /* كارت الإكسسوارات (أخضر) */
+
+        .card-title { font-size: 22px; font-weight: bold; margin-bottom: 20px; color: #fff; }
+        
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #0d1117;
+            margin: 12px 0;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #21262d;
+            transition: 0.3s;
+        }
+        .price-row:hover { background: #1c2128; border-color: #30363d; }
+        .item-name { font-weight: bold; font-size: 15px; color: #c9d1d9;}
+        .item-price { font-weight: bold; color: #3fb950; font-size: 17px; } /* لون السعر في الكروت */
+
+        /* ================================== */
+        /* تصميم جداول الألعاب */
+        /* ================================== */
+        .tables-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+        @media (max-width: 900px) { .tables-wrapper { grid-template-columns: 1fr; } }
+
+        .table-container { background-color: #161b22; border-radius: 12px; border: 1px solid #30363d; overflow: hidden; }
+        .section-title { font-size: 20px; text-align: center; padding: 15px; color: #fff; font-weight: bold; }
+        .title-ps5 { background-color: #1a5ca6; } /* لون خلفية عنوان جدول ألعاب PS5 */
+        .title-ps4 { background-color: #003791; } /* لون خلفية عنوان جدول ألعاب PS4 */
+
+        table { width: 100%; border-collapse: collapse; text-align: center; }
+        th, td { padding: 12px; border-bottom: 1px solid #30363d; border-left: 1px solid #30363d; font-size: 14px;}
+        th:last-child, td:last-child { border-left: none; }
+        
+        .sub-header { background-color: #21262d; color: #8b949e; font-size: 13px; }
+        tr:hover { background-color: #1c2128; }
+        .sold-out { color: #da3633; font-size: 12px; font-weight: bold; background-color: rgba(218, 54, 51, 0.1); padding: 3px 6px; border-radius: 4px; display: inline-block; }
+    </style>
+</head>
+<body>
+
+    <h1>🎮 GAME SHOP STORE 🎮</h1>
+
+    <!-- 📌👇 زراير الأقسام: لو عايز تغير اسم زرار عدله من هنا 👇📌 -->
+    <div class="tabs-container">
+        <button class="tab-btn active" onclick="openSection('games')">أسعار الألعاب</button>
+        <button class="tab-btn" onclick="openSection('controllers')">مبيعات الدرعات</button>
+        <button class="tab-btn" onclick="openSection('maintenance')">صيانة الدرعات</button>
+        <button class="tab-btn" onclick="openSection('accessories')">الإكسسوارات</button>
+    </div>
+
+    <!-- 📌👇 القسم الأول: الألعاب (شريط البحث والجداول) 👇📌 -->
+    <div id="games" class="tab-content active">
+        <div class="search-container">
+            <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="🔍 ابحث عن اسم اللعبة هنا...">
+        </div>
+
+        <div class="tables-wrapper">
+            <!-- جدول ألعاب PS5 -->
+            <div class="table-container">
+                <div class="section-title title-ps5">ألعاب PS5</div>
+                <table class="ps5-table">
+                    <thead>
+                        <tr>
+                            <th rowspan="2" style="width: 40%;">اسم اللعبة</th>
+                            <th colspan="3">الأسعار</th>
+                        </tr>
+                        <tr>
+                            <th class="sub-header">OFF</th>
+                            <th class="sub-header">PR</th>
+                            <th class="sub-header">SC</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ps5Body"></tbody>
+                </table>
+            </div>
+
+            <!-- جدول ألعاب PS4 -->
+            <div class="table-container">
+                <div class="section-title title-ps4">ألعاب PS4</div>
+                <table class="ps4-table">
+                    <thead>
+                        <tr>
+                            <th rowspan="2" style="width: 40%;">اسم اللعبة</th>
+                            <th colspan="3">الأسعار</th>
+                        </tr>
+                        <tr>
+                            <th class="sub-header">OFF</th>
+                            <th class="sub-header">PR</th>
+                            <th class="sub-header">SC</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ps4Body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- 📌👇 القسم الثاني: مبيعات الدرعات (هتتملي بياناته من الجافاسكريبت تحت) 👇📌 -->
+    <div id="controllers" class="tab-content">
+        <div class="grid-container" id="controllersContainer">
+            <!-- الكروت هتترسم هنا أوتوماتيك -->
+        </div>
+    </div>
+
+    <!-- 📌👇 القسم الثالث: الصيانة (هتتملي بياناته من الجافاسكريبت تحت) 👇📌 -->
+    <div id="maintenance" class="tab-content">
+        <div class="grid-container" id="maintenanceContainer">
+            <!-- الكروت هتترسم هنا أوتوماتيك -->
+        </div>
+    </div>
+
+    <!-- 📌👇 القسم الرابع: الإكسسوارات (هتتملي بياناته من الجافاسكريبت تحت) 👇📌 -->
+    <div id="accessories" class="tab-content">
+        <div class="grid-container" id="accessoriesContainer">
+            <!-- الكروت هتترسم هنا أوتوماتيك -->
+        </div>
+    </div>
+
+    <script>
+        // دالة التنقل بين الأقسام (متعدلش فيها حاجة)
+        function openSection(sectionId) {
+            document.querySelectorAll('.tab-content').forEach(content => { content.classList.remove('active'); });
+            document.querySelectorAll('.tab-btn').forEach(btn => { btn.classList.remove('active'); });
+            document.getElementById(sectionId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // =========================================================
+        // ⚙️ 📌👇 أهم جزء: من هنا بتعدل الأسعار والبيانات 👇📌 ⚙️
+        // =========================================================
+
+        // 1️⃣ بيانات مبيعات الدرعات (تقدر تغير السعر بين علامات التنصيص "")
+        const controllersData = [
+            {
+                name: "يد تحكم PS5 (DualSense)",
+                theme: "border-ps5",
+                items: [
+                    { label: "أصلي (وكيل)", price: "3500", color: "#58a6ff" }, /* لون النص أزرق */
+                    { label: "مستورد (خارج)", price: "3200", color: "#3fb950" }, /* لون النص أخضر */
+                    { label: "كوبي (درجة أولى)", price: "1500", color: "#d2a8ff" } /* لون النص بنفسجي */
+                ]
+            },
+            {
+                name: "يد تحكم PS4 (DualShock 4)",
+                theme: "border-ps4",
+                items: [
+                    { label: "أصلي (وكيل)", price: "1500", color: "#58a6ff" },
+                    { label: "مستورد (خارج)", price: "1200", color: "#3fb950" },
+                    { label: "كوبي (درجة أولى)", price: "500", color: "#d2a8ff" }
+                ]
+            }
+        ];
+
+        // 2️⃣ بيانات أسعار الصيانة (عشان تضيف عطل جديد، انسخ سطر من السطور وكرره)
+        const maintenanceData = [
+            {
+                name: "صيانة درعات PS5",
+                theme: "border-maintain",
+                items: [
+                    { label: "تغيير أنالوج (أصلي)", price: "350", color: "#fff" }, /* color: #fff يعني الخط أبيض */
+                    { label: "تغيير فلاتة زراير", price: "200", color: "#fff" },
+                    { label: "تغيير جلد زراير", price: "100", color: "#fff" },
+                    { label: "تنظيف وصيانة دورية", price: "150", color: "#fff" }
+                ]
+            },
+            {
+                name: "صيانة درعات PS4",
+                theme: "border-maintain",
+                items: [
+                    { label: "تغيير أنالوج (أصلي)", price: "250", color: "#fff" },
+                    { label: "تغيير فلاتة شحن", price: "150", color: "#fff" },
+                    { label: "تغيير بطارية", price: "300", color: "#fff" },
+                    { label: "تنظيف وصيانة دورية", price: "100", color: "#fff" }
+                ]
+            }
+        ];
+
+        // 3️⃣ بيانات أسعار الإكسسوارات (نفس فكرة الصيانة بالظبط)
+        const accessoriesData = [
+            {
+                name: "إكسسوارات PS5",
+                theme: "border-acc",
+                items: [
+                    { label: "سماعة Pulse 3D", price: "4000", color: "#fff" },
+                    { label: "قاعدة شحن مزدوجة", price: "600", color: "#fff" },
+                    { label: "جراب سيليكون للذراع", price: "150", color: "#fff" },
+                    { label: "طقم حماية أنالوج", price: "50", color: "#fff" }
+                ]
+            },
+            {
+                name: "إكسسوارات PS4",
+                theme: "border-acc",
+                items: [
+                    { label: "كابل شحن أصلي", price: "150", color: "#fff" },
+                    { label: "قاعدة شحن مزدوجة", price: "350", color: "#fff" },
+                    { label: "جراب سيليكون للذراع", price: "100", color: "#fff" },
+                    { label: "طقم حماية أنالوج", price: "50", color: "#fff" }
+                ]
+            }
+        ];
+
+        // 4️⃣ ألعاب PS5 (ضيف لعبتك الجديدة بنفس الشكل ده)
+        const ps5Games = [
+            {name: "FC 26", off: "350", pr: "1200", sc: "500"},
+            {name: "GTA", off: "300", pr: "800", sc: "500"},
+            {name: "Assassin’s Creed Shadows", off: "500", pr: "2000", sc: "1500"},
+            {name: "Elden ring", off: "500", pr: "1200", sc: "900"},
+            {name: "Ghost of Yōte", off: "500", pr: "2000", sc: "1500"},
+            {name: "Marvel’s Spider-Man 2", off: "500", pr: "1500", sc: "1200"},
+            {name: "WWE26", off: "600", pr: "2200", sc: "1800"}
+            /* ضيف ألعابك هنا مكان السطر ده */
+        ];
+
+        // 5️⃣ ألعاب PS4 (ضيف لعبتك الجديدة بنفس الشكل ده)
+        const ps4Games = [
+            {name: "FC 26", off: "350", pr: "1200", sc: "500"},
+            {name: "GTA", off: "300", pr: "800", sc: "500"},
+            {name: "God of War Ragnarök", off: "400", pr: "1000", sc: "750"},
+            {name: "Red Dead Redemption 2", off: "350", pr: "900", sc: "700"},
+            {name: "The Last Of Us™ Remastered", off: "350", pr: "800", sc: "600"}
+            /* ضيف ألعابك هنا مكان السطر ده */
+        ];
+
+        // =========================================================
+        // 🛠️ دوال التشغيل (برمجة الموقع - متعدلش فيها حاجة عشان متبوظش) 🛠️
+        // =========================================================
+
+        // رسم كروت الدرعات والصيانة والإكسسوارات
+        function renderCards(dataArray, containerId) {
+            const container = document.getElementById(containerId);
+            dataArray.forEach(group => {
+                let itemsHTML = '';
+                group.items.forEach(item => {
+                    itemsHTML += `
+                        <div class="price-row">
+                            <span class="item-name" style="color:${item.color}">${item.label}</span>
+                            <span class="item-price">${item.price} ج.م</span>
+                        </div>
+                    `;
+                });
+                container.innerHTML += `
+                    <div class="card ${group.theme}">
+                        <div class="card-title">${group.name}</div>
+                        ${itemsHTML}
+                    </div>
+                `;
+            });
+        }
+
+        renderCards(controllersData, "controllersContainer");
+        renderCards(maintenanceData, "maintenanceContainer");
+        renderCards(accessoriesData, "accessoriesContainer");
+
+        // رسم جداول الألعاب وحالة نفاد الكمية
+        function formatPrice(val) {
+            if (val.toLowerCase() === 'x' || val === '❌' || val === '-') return '<span class="sold-out">نفدت ❌</span>';
+            return `<span style="color: #3fb950; font-weight: bold;">${val}</span>`;
+        }
+
+        function renderTable(gamesArray, tbodyId) {
+            const tbody = document.getElementById(tbodyId);
+            gamesArray.forEach(game => {
+                let tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td style="font-weight: bold; color: #fff; text-align: left;" dir="ltr">${game.name}</td>
+                    <td>${formatPrice(game.off)}</td>
+                    <td>${formatPrice(game.pr)}</td>
+                    <td>${formatPrice(game.sc)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        renderTable(ps5Games, "ps5Body");
+        renderTable(ps4Games, "ps4Body");
+
+        // دالة البحث في جدول الألعاب
+        function searchTable() {
+            let input = document.getElementById("searchInput").value.toUpperCase();
+            let tables = [document.getElementById("ps5Body"), document.getElementById("ps4Body")];
+
+            tables.forEach(tbody => {
+                let tr = tbody.getElementsByTagName("tr");
+                for (let i = 0; i < tr.length; i++) {
+                    let td = tr[i].getElementsByTagName("td")[0];
+                    if (td) {
+                        let txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(input) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }       
+                }
+            });
+        }
+    </script>
+</body>
+</html>
